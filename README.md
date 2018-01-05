@@ -11,7 +11,7 @@ Steps for lane line finding
 7) Warp the detected lane boundaries back onto the original image.
 8) Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
-
+---------------------------------------------------------------------------
  
 1) specify the chessboard width and height, and number of chessboard frames. The output file contains camera matrix and distortion 
 coefficients. Use them in camera_calibrate/undistort.cpp to calibrate test images
