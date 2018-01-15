@@ -1,7 +1,20 @@
 <?xml version="1.0"?>
 <opencv_storage>
-<images>
-test_images/test1.jpg
-test_images/test2.jpg 
+<images> 
+test_images/test2/Top.jpg 
+test_images/test2/test2.jpg
+test_images/test2/str.jpg
+test_images/test2/test3.jpg
+test_images/test2/test1.jpg
+test_images/test2/test4.jpg
+test_images/test2/test5.jpg
+test_images/test2/test6.jpg
+test_images/test2/test7.jpg
+test_images/test2/test9.jpg
+test_images/test2/test8.jpg
+test_images/test2/test10.jpg
+test_images/test2/test11.jpg
+test_images/test2/test12.jpg
+test_images/test2/test13.jpg
 </images>
 </opencv_storage>

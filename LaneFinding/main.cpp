@@ -1,41 +1,26 @@
-#include "undistort.h"
+#include <opencv2/core/core.hpp>
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/calib3d/calib3d.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "Image.h"
+
+using namespace cv;
 
 
- 
+int main() {
 
-#include <iostream>
-#include <cstdlib>
+	Image src(imread("camera.jpg", IMREAD_GRAYSCALE));
+	Image dst;
+	 
+//	src.applyGaussianBlur(dst);
+	
+	
 
-	using namespace cv;
-	using namespace std;
+	src.applyHistogramEqualizer(src);
+	 
+	src.applyThreshold(dst, 190, 255);
+	
 
-	void printHelp(char* programName) {
-		cout << " Correct usage: " << programName << " camera.yml" << " images_paths.xml " << endl;
-		cout << " camera.yml = file with camera matrix and distortion coefficients. " << endl;
-		cout << " images_paths.xml = file with path to images that should be undistorted." << endl;
-		exit(EXIT_FAILURE);
-	}
-
-	int main(int argc, char** argv) {
-		/*if (argc == 1) {
-			cout << " Wrong number of arguments (!=3) " << endl;
-			printHelp(argv[0]);
-		}
-
-		if (!string("--help").compare(argv[1]) || !string("-h").compare(argv[1]))
-			printHelp(argv[0]);
-
-		if (argc != 3) {
-			cout << " Wrong number of arguments (!=3) " << endl;
-			printHelp(argv[0]);
-		}
-		*/
-
-		UndistortImages undistortImages;
-		undistortImages.readCameraParameters("D:\\C++ projects\\Opencv\\FirstOpenCV\\x64\\Debug\\out_camera_data.yml");
-		undistortImages.loadImages("images.xml");
-		undistortImages.undistortImages();
-
-		return 0;
-	}
-
+	return 0;
+	 
+}

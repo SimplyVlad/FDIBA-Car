@@ -1,6 +1,6 @@
 #include "undistort.h"
 
-
+#include "Camera.h"
  
 
 #include <iostream>
@@ -16,24 +16,18 @@
 		exit(EXIT_FAILURE);
 	}
 
+	
 	int main(int argc, char** argv) {
-		/*if (argc == 1) {
-			cout << " Wrong number of arguments (!=3) " << endl;
-			printHelp(argv[0]);
-		}
+		
+		Camera::cameraCalibrate(argc, argv);
 
-		if (!string("--help").compare(argv[1]) || !string("-h").compare(argv[1]))
-			printHelp(argv[0]);
+		//create delay so it can evaluate the camera matrix
+		waitKey(5000);
 
-		if (argc != 3) {
-			cout << " Wrong number of arguments (!=3) " << endl;
-			printHelp(argv[0]);
-		}
-		*/
 
 		UndistortImages undistortImages;
-		undistortImages.readCameraParameters("D:\\C++ projects\\Opencv\\FirstOpenCV\\x64\\Debug\\out_camera_data.yml");
-		undistortImages.loadImages("images.xml");
+		undistortImages.readCameraParameters("D:\\C++ projects\\Opencv\\OpenCV\\x64\\Debug\\personal_camera.yml");
+		undistortImages.loadImages("Images.xml");
 		undistortImages.undistortImages();
 
 		return 0;
