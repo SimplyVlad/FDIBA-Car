@@ -13,9 +13,8 @@ Steps for lane line finding
 
 ---------------------------------------------------------------------------
  
-1) specify the chessboard width and height, and number of chessboard frames. The output file contains camera matrix and distortion 
-coefficients. Use them in camera_calibrate/undistort.cpp to calibrate test images
+1) run the LaneFinding.exe file from Debug with parameters chessboard width and height, and number of chessboard frames (for example, -w 9 -h 5 -n 14). The output file(also in Debug folder) contains camera matrix and distortion coefficients. Use them in later in calibrateAndUndistort.cpp to calibrate an image. NOTE: Camera calibration should be done before the other part of the project
  
-3)thresholdBinary.cpp - Reduce noise, use hologram equalizer and create a thresholded binary image. Set region of interest
-
-Explanation is comming soon.. 
+3) Blur the image by applying Gaussian function to reduce noise and detail. Apply hologram equalizer to improve the contrast in the image and make the lines more reocognizable. Then apply binary threshold - that is, the image is gray, so its pixel values are from 0 to 255. After applying the threshold all pixels which values are greater than lets say 170 (thresh) become 255(maxValue). In that way the image contains only 1 and 0's, or in other words, lines and black.   
+![alt text](https://user-images.githubusercontent.com/20464575/34950014-857ba998-fa1a-11e7-9a49-129240ce61cb.png) 
+ 
