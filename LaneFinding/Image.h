@@ -21,5 +21,7 @@ public:
 	void applyGaussianBlur( Image& dst);
 	void show(std::string s="window");
 	void showHistogram();
-
+	cv::Mat getIm() {
+		return image; 
+	}
 };
