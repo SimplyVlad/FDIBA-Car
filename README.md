@@ -21,3 +21,6 @@ Steps for lane line finding
 
 ![alt text](https://user-images.githubusercontent.com/20464575/34950014-857ba998-fa1a-11e7-9a49-129240ce61cb.png) 
  
+4) Calculate perspective transform. Get the coordinates of four vertices in the source image(**p1 in getBirdsView**) and four coordinates defining where the previos points will be placed on the destination image(in that case, the points from the source image are mapped to the whole viewport). **warpPerspective** apllies the perspective transformation using the returned matrix. The point of doing this is to specify the region containing only the lane lines in order to get "bird view" of them and easily make some calculations.
+
+![alt text](https://user-images.githubusercontent.com/20464575/35812864-caf374a2-0a9a-11e8-84ef-b9dd165abd8b.png)
