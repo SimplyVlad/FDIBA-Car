@@ -79,8 +79,8 @@ int main() {
 	dst.getBirdsView(src_vertices, dst_vertices, dst1);
 
 	dst1.applyThreshold(dst1, 190, 255);
-	 
-	imshow("src", dst1.getIm());
+	dst1.show();
+ 
 	 
 	waitKey();
 	return 0;
