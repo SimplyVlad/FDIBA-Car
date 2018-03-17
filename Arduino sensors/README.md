@@ -5,7 +5,7 @@ First task.
 Testing codes for:
 	
 	1.KY-050 Ultrasonic_Distance_Sensor
-![alt text](http://sensorkit.en.joy-it.net/index.php?title=File:KY-0050.png)
+![alt text](https://images-na.ssl-images-amazon.com/images/I/51GZZ5EU9PL._SY355_.jpg)
 	2.Sharp_IR_Sensor
 ![alt text](https://cdn.sparkfun.com//assets/parts/9/4/9/2/08959-03-L.jpg)
 -----------
