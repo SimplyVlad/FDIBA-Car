@@ -1,54 +1,49 @@
-//
-// SonarSRF10
-// Arduino Library for controlling SRF sonar sensors
-// http://www.arduino.cc/playground/Main/SonarSrf08
-//
-// MIT License
-// Copyright(c) 2009 Zach Foresta
-// Copyright(c) 2012 Philipp A. Mohrenweiser
-// Copyright(c) 2012-2016 Leo Colombaro
-//
 
-#include <Wire.h>
-#include <SonarSRF10.h>
-
-#define MAIN_10_ADDRESS (0xF8 >> 1)
-SonarSRF10 MainSonar(MAIN_10_ADDRESS);
-
-char unit = 'c'; // 'i' for inches, 'c' for centimeters, 'm' for micro-seconds
-
-void setup()
-{
-  Serial.begin(9600);
-
-  MainSonar.begin();
-  isConnected("SRF10", MainSonar.readVersion());
+#define Echo_EingangsPin 7 // Echo input-pin 7
+#define Trigger_AusgangsPin 2 // Trigger output-pin 2
+ 
+// Needed variables will be defined and initialized
+int maximumRange = 300; 
+int minimumRange = 2; 
+long Abstand;
+long Dauer;
+ 
+void setup() {
+ pinMode(Trigger_AusgangsPin, OUTPUT);
+ pinMode(Echo_EingangsPin, INPUT);
+ Serial.begin (9600);
 }
-
-void loop()
-{
-  distance("SRF10", MainSonar.readRange(unit));
-}
-
-// Print out distance
-void distance(String reference, int sensorReading)
-{
-  Serial.print("Distance from " + reference + ": ");
-  Serial.print(sensorReading);
-  Serial.println(unit);
-}
-
-// Print out distance
-void isConnected(String reference, int sensorSoft)
-{
-  if (sensorSoft >= 0)
-  {
-    Serial.print("Sensor " + reference + " connected (");
-    Serial.print(sensorSoft);
-    Serial.println(")");
-  }
-  else
-  {
-    Serial.println("Sensor " + reference + " not detected...");
-  }
+ 
+void loop() {
+ 
+ // Distance measurement will be started with a 10us long trigger signal
+ digitalWrite(Trigger_AusgangsPin, HIGH);
+ delayMicroseconds(10); 
+ digitalWrite(Trigger_AusgangsPin, LOW);
+  
+ // Now it will be waited at the echo input till the signal was activated
+ // and after that the time will be measured how long it is active 
+ Dauer = pulseIn(Echo_EingangsPin, HIGH);
+  
+ // Now the distance will be calculated with the recorded time
+ Abstand = Dauer/58.2;
+  
+ // Check if the measured value is in the permitted range
+ if (Abstand >= maximumRange || Abstand <= minimumRange)
+ {
+    // An error message will be shown if it's not
+      Serial.println("Distance is not in the permitted range");
+      Serial.println("-----------------------------------");
+ }  
+  
+ else
+ {
+    // The calculated distance will be shown at the serial output
+      Serial.print("The distance is: ");
+      Serial.print(Abstand);
+      Serial.println("cm");
+      Serial.println("-----------------------------------");
+ }
+  // Break between single measurements
+ delay(500);
 }

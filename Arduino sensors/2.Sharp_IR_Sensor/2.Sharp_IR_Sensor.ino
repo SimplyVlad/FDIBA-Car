@@ -1,17 +1,18 @@
-#define sensor A0 // Sharp IR GP2Y0A41SK0F (4-30cm, analog)
+int sensorpin = A0;                 // analog pin used to connect the sharp sensor
+int val = 0;
+int distance; // variable to store the values from sensor(initially zero)
 
-void setup() {
-  Serial.begin(9600); // start the serial port
+void setup()
+{
+  Serial.begin(9600);               // starts the serial monitor
 }
-
-void loop() {
+ 
+void loop()
+{
+  val = analogRead(sensorpin);       // reads the value of the sharp sensor
+  distance = 4800/(val - 20);
+  Serial.println(distance);
+  Serial.println(" cm"); // prints the value of the sensor to the serial monitor
   
-  // 5v
-  float volts = analogRead(sensor)*0.0048828125;  // value from sensor * (5/1024)
-  int distance = 13*pow(volts, -1); // worked out from datasheet graph
-  delay(1000); // slow down serial port 
-  
-  if (distance <= 30){
-    Serial.println(distance);   // print the distance
-  }
+  delay(100);                    // wait for this much time before printing next value
 }
