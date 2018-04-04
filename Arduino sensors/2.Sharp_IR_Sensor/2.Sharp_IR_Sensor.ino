@@ -1,6 +1,9 @@
-int sensorpin = A0;                 // analog pin used to connect the sharp sensor
+int sensorpin = A0;
+int sensorpin1 = A1;
 int val = 0;
+int val1 = 0;
 int distance; // variable to store the values from sensor(initially zero)
+int distance1;
 
 void setup()
 {
@@ -9,10 +12,13 @@ void setup()
  
 void loop()
 {
-  val = analogRead(sensorpin);       // reads the value of the sharp sensor
+  val = analogRead(sensorpin);
+  val1 = analogRead(sensorpin1);
   distance = 4800/(val - 20);
+  distance1 = 4800/(val1 - 20);
+  Serial.println(distance1); // prints the value of the sensor to the serial monitor
   Serial.println(distance);
-  Serial.println(" cm"); // prints the value of the sensor to the serial monitor
+  Serial.println();
   
-  delay(100);                    // wait for this much time before printing next value
+  delay(200);                    // wait for this much time before printing next value
 }
