@@ -34,12 +34,12 @@ void loop() {
   Serial.print("     ");
   Serial.println(ch2);
   
-  if (ch2 > 1300) // forward
+  if (ch2 > 1499) // forward
   {
      digitalWrite(dir_a, HIGH);
      analogWrite(pwm_a, SpeedForward());
   }
-  else if(ch2<1200)//backwards
+  else if(ch2<1200 && ch2>0)//backwards
   {
     digitalWrite(dir_a,LOW);
     analogWrite(pwm_a, SpeedBackwards());
@@ -54,12 +54,12 @@ void loop() {
 
 int SpeedForward()
 {
-  int motorSpeed = map(ch2, 1300, 1900, 0, 255);
+  int motorSpeed = map(ch2, 1300, 1950, 80, 255); 
   return motorSpeed;
 }
 
 int SpeedBackwards()
 {
-  int motorSpeed = map(ch2, 1200, 800, 0, 255);
+  int motorSpeed = map(ch2, 1200, 730, 80, 255);
   return motorSpeed;
 }
