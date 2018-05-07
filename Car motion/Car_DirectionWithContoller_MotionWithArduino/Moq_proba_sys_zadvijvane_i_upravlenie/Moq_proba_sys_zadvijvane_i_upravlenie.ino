@@ -60,6 +60,6 @@ int SpeedForward()
 
 int SpeedBackwards()
 {
-  int motorSpeed = map(ch2, 1200, 730, 80, 255);
+  int motorSpeed = map(ch2, 1200, 730, 80 , 255);
   return motorSpeed;
 }
