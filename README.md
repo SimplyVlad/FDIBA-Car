@@ -4,7 +4,7 @@ Steps for lane line finding
 
 1) Compute the camera calibration matrix and distortion coefficients using frames of chessboard captured by the camera.
 2) Apply a distortion correction to raw images.
-3) Reduce noise, use hologram equalizer and create a thresholded binary image.
+3) Create a thresholded binary image, use Gaussian blur with kernel size 7x7 to reduce noise, use canny edge.
 4) Apply a perspective transform to rectify binary image ("birds-eye view").
 5) Detect lane pixels and fit to find the lane boundary.
 6) Determine the curvature of the lane and vehicle position with respect to center.
@@ -15,7 +15,7 @@ Steps for lane line finding
  
 1) Run the LaneFinding.exe file from Debug with parameters chessboard width and height, and number of chessboard frames (for example, -w 9 -h 5 -n 14). The output file(also in Debug folder) contains camera matrix and distortion coefficients. Use them in later in calibrateAndUndistort.cpp to calibrate an image. NOTE: Camera calibration should be done before the other part of the project
  
-3) Blur the image by applying Gaussian function to reduce noise and detail. Apply hologram equalizer to improve the contrast in the image and make the lines more reocognizable. Then apply binary threshold - that is, the image is gray, so its pixel values are from 0 to 255. After applying the threshold all pixels which values are greater than lets say 170 (thresh) become 255(maxValue). In that way the image contains only 1 and 0's, or in other words, lines and black.   
+2) Apply binary threshold - that is, the image is gray, so its pixel values are from 0 to 255. After applying the threshold all pixels which values are greater than lets say 170 (thresh) become 255(maxValue). In that way the image contains only 1 and 0's, or in other words, lines and black.Blur the image by applying Gaussian function with kernel size 7x7 to reduce noise and detail. Apply canny edge detection to improve the contrast in the image and make the lines more reocognizable.   
 
 ![alt text](https://user-images.githubusercontent.com/20464575/34950126-e8318ae4-fa1a-11e7-9d28-9f7aefb430f9.jpg)
 
