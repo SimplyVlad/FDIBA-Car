@@ -7,12 +7,26 @@
 #include <vector>
 #include "polyfit.hpp"
 #include <string>
+#include <vector>
 
 using namespace std;
-
 using namespace cv;
 
- 
+
+enum Lines { leftLine = 1, middleLine, rightLine };
+
+// fit 2nd degree polynomial to the given line 
+void fitPolynomialToLine(vector<double>& xCoords, vector<double>& yCoords, Lines line);
+
+
+//get 6 points from the line which begins at "beginning"
+//return vector with the 6 points
+vector<double> getLinePoints(const Mat& image, int beginning);
+
+//find the beginning of middle line in the image
+//parameter is Mat with bird view 
+int findMiddleLine(const Mat& middle);
+
  
 //find the beginning of left line in the image
 //parameter is Mat with bird view 
@@ -38,6 +52,16 @@ Mat imageROI, gray, frame, binary, gaussian, canny, Perspective_Matrix(2, 4, CV_
 
 Point2f inputRect[4];
 Point2f outputRect[4];
+
+//coefficients for polynomial fitting
+vector<double> leftLineCoeffs(3);
+vector<double> middleLineCoeffs(3);
+vector<double> rightLineCoeffs(3);
+
+
+ 
+
+
 
 int main() {
 	VideoCapture cap(0); // open the default camera
@@ -91,7 +115,7 @@ int main() {
 
 		//test
 		cout << "LEFT: " << findLeftLine(canny) << endl;
-		cout << "LEFT: " << findRightLine(canny) << endl;
+		 
 
 
 
@@ -100,37 +124,71 @@ int main() {
 
 
 	return 0;
-}
-
-
-	//POLYFIT - HOW TO USE
-	 /*
-	 
-	vector<double> xV = {0, 1,2,3,4 };
-	vector<double> yV = {0, 1,2,1,-1 };
-
-	vector<double> coeff = mathalgo::polyfit(xV, yV, 3);
-	 
-	// ...
-	for (std::vector<double>::const_iterator i = coeff.begin(); i != coeff.end(); ++i)
-		std::cout << *i << ' ';
-
-	 
-
-	vector<double> checkYforGivenX = { 4,6,10 };
-	vector<double> checkedY = mathalgo::polyval(coeff, checkYforGivenX);
-
-	cout << endl;
-	for (std::vector<double>::const_iterator i = checkedX.begin(); i != checkedX.end(); ++i)
-		std::cout << *i << ' ';
-		*/
-	 
+} 
 	 
  
 
+/*
+vector<int> getLinePoints(const Mat& image, int beginning) {
+	int leftOfLine = 0, rightOfLine = 0;
+	int nextBegin = beginning;
+	//start at bottom left
+	for (int y = image.rows - 60;y > 0;y -= 60) {
+		if (nextBegin < 30) {
+
+			for (int x = 0;x < 60;x++) {
+				if (image.at<uchar>(Point(x, y)) == 255) {
+					if (leftOfLine == 0) {
+						leftOfLine = x;
+						continue;
+					}
+					else if (rightOfLine == 0) {
+						if ((rightOfLine - leftOfLine) < 1)
+							continue;
+						else {
+							rightOfLine = x;
+							break;
+						}
+					}
+
+
+				}
+
+			}
+		
+		}
+
+
+
+
+	}
+
+}
+*/
+
+
+
+void fitPolynomialToLine(vector<double>& xCoords,vector<double>& yCoords, Lines line){
+	switch(line) {
+	case leftLine:
+		leftLineCoeffs = mathalgo::polyfit(xCoords, yCoords, 2);
+		break;
+	case middleLine:
+		middleLineCoeffs = mathalgo::polyfit(xCoords, yCoords, 2);
+		break;
+	case rightLine:
+		rightLineCoeffs = mathalgo::polyfit(xCoords, yCoords, 2);
+		break;
+	}
+	 
+}
+
+
+
+
 
 //algorithm: search for 255 value to find the left side of the left line and set leftOfLine to that x
-//search 80 pixels to the right for 255 value to see if the right side of the left line will be encountered, 
+//search 100 pixels to the right for 255 value to see if the right side of the left line will be encountered, 
 //if yes - beginning of left line is found return middle 
 //if 255 value is encountered in less than 22 pixels to the right, than its distance is too small for right side
 //of the line, it is probably noise, continue with new search with Y-axis decreased by 20
@@ -141,7 +199,7 @@ int findLeftLine(const Mat& leftSide) {
 	
 	//start at bottom left
 	for (int y = nRow;y > 360;y -= 20) {
-		for (int x = 20;x < 100;x++) {
+		for (int x = 0;x < 100;x++) {
 			if (leftSide.at<uchar>(Point(x, y)) == 255) {
 				if (leftOfLine == 0) {
 					leftOfLine = x;
@@ -167,6 +225,43 @@ int findLeftLine(const Mat& leftSide) {
 }
 
 
+
+int findMiddleLine(const Mat& middle) {
+	int nRow = middle.rows;  // y-axis
+
+	int leftOfLine = 0, rightOfLine = 0;
+
+	 
+	for (int y = nRow;y > 360;y -= 20) {
+		for (int x = 270;x < 350;x++) {
+			if (middle.at<uchar>(Point(x, y)) == 255) {
+				if (leftOfLine == 0) {
+					leftOfLine = x;
+					continue;
+				}
+				else if (rightOfLine == 0) {
+					if ((rightOfLine - leftOfLine) < 12)
+						continue;
+					else {
+						rightOfLine = x;
+						break;
+					}
+				}
+
+
+			}
+
+		}
+		leftOfLine = 0;
+		rightOfLine = 0;
+	}
+	return (leftOfLine + rightOfLine) / 2;
+}
+
+
+ 
+
+
 //algorithm: search for 255 value to find the left side of the right line and set leftOfLine to that x
 //search 90 pixels to the right for 255 value to see if
 //the right side of the right line will be encountered, if yes - beginning of right line is found return middle 
@@ -177,7 +272,7 @@ int findRightLine(const Mat& rightSide) {
 
 	int leftOfLine = 0, rightOfLine = 0;
 
-	//start at bottom left
+	 
 	for (int y = nRow;y > 360;y -= 20) {
 		for (int x = 530;x < 640;x++) {
 			if (rightSide.at<uchar>(Point(x, y)) == 255) {
