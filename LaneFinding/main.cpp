@@ -2,12 +2,43 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <chrono>
+#include <opencv2/core/core.hpp>
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/calib3d/calib3d.hpp"
+#include "opencv2/highgui/highgui.hpp"
+ 
+#include <iostream> 
+#include <vector>
+#include "polyfit.hpp"
+#include <string>
+
+
 
 using namespace std;
 using namespace cv;
-using namespace cv::cuda;
+ 
 
-cv::Mat imageROI, gray, frame, binary, canny, Perspective_Matrix(2, 4, CV_32FC1), Perspective_Matrix_inverse, Perspective;
+
+
+ 
+//find the beginning of left line in the image
+//parameter is Mat with bird view 
+int findLeftLine(const Mat& leftSide);
+
+
+/*
+//iterate through columns in the left side of the image to find the column with the most 255 values
+//returned x will be the beginning of left line 
+int histogramPeakLeft(const Mat& leftSide);
+
+//iterate through columns in the right side of the image to find the column with the most 255 values
+//returned x will be the beginning of right line 
+int histogramPeakRight(const Mat& rightSide);
+*/
+
+
+
+cv::Mat imageROI, gray, frame, binary, gaussian, canny, Perspective_Matrix(2, 4, CV_32FC1), Perspective_Matrix_inverse, Perspective;
 Point2f inputRect[4];
 Point2f outputRect[4];
 
@@ -45,8 +76,8 @@ int main()
 		cv::cvtColor(Perspective, gray, CV_BGR2GRAY);
 		cv::threshold(gray, binary, 160, 255, cv::THRESH_BINARY);
 
-		GaussianBlur(binary, canny, Size(7, 7), 1.5, 1.5);
-		Canny(canny, canny, 0, 30, 3);
+		GaussianBlur(binary, gaussian, Size(7, 7), 1.5, 1.5);
+		Canny(gaussian, canny, 0, 30, 3);
 
 
 		namedWindow("normal camera", WINDOW_AUTOSIZE);
@@ -58,7 +89,49 @@ int main()
 		imshow("binary", binary);
 		imshow("perspective", imageROI);
 		if (waitKey(30) >= 0) break;
+
+	//test
+		cout << "LEFT: " << findLeftLine(canny) << endl;
 	}
 	// the camera will be deinitialized automatically in VideoCapture destructor
 	return 0;
 }
+
+
+
+// suppose left line is in the range from x=20 to x =100
+//algorithm: start from x=20 in the bottom left of the image, search for 255 value to find the left side of the left line and set leftOfLine to that x
+//search 80 pixels to the right for 255 value to see if the right side of the left line will be encountered, if yes - beginning of left line is found return middle of both leftOfLine and rightOfLine
+//if 255 value is encountered in less than 22 pixels to the right, than the distance is too small for right side of the line, it is probably noise, continue with new search with Y-axis decreased by 20
+int findLeftLine(const Mat& leftSide) {
+	int nRow = leftSide.rows;  // y-axis
+	
+	int leftOfLine =0, rightOfLine =0;
+	
+	//start at bottom left
+	for (int y = nRow;y > 360;y -= 20) {
+		for (int x = 20;x < 100;x++) {
+			if (leftSide.at<uchar>(Point(x, y)) == 255) {
+				if (leftOfLine == 0) {
+					leftOfLine = x;
+					continue;
+				}
+				else if (rightOfLine == 0) {
+					if ((rightOfLine - leftOfLine) < 12)
+						continue;
+					else {
+						rightOfLine = x;
+						break;
+					}
+				}
+
+
+			}
+			
+		}
+		leftOfLine = 0;
+		rightOfLine = 0;
+	}
+	return (leftOfLine + rightOfLine) / 2;
+}
+
