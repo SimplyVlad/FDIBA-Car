@@ -1,4 +1,4 @@
-// Motor Channel A
+ // Motor Channel A
 // PIN PWM       D3
 // PIN Direction D12\
 // PIN BRAKE     D9
@@ -16,14 +16,17 @@ void setup() {
   pinMode( pwm_a, OUTPUT ); // PWM (speed)
   pinMode( dir_a, OUTPUT ); // Direction (forward/backwards)
   pinMode(9, INPUT); //Initiates Brake Channel A pin
-  
+  pinMode(Trigger_AusgangsPin, OUTPUT);
+  pinMode(Echo_EingangsPin, INPUT);
   int motorSpeed = 0;
   
   Serial.begin(9600);
  }
 
 void loop() {
-  
+  digitalWrite(Trigger_AusgangsPin, HIGH);
+ delayMicroseconds(10); 
+ digitalWrite(Trigger_AusgangsPin, LOW);
   Dauer = pulseIn(Echo_EingangsPin, HIGH);
   Abstand = Dauer/58.2;
   
@@ -31,12 +34,12 @@ void loop() {
   Serial.print(Abstand);
   Serial.println("cm");
   
-  if (Abstand < 10) // 10cm from an object
+  if (Abstand < 35) // 10cm from an object
   {
-     digitalWrite(dir_a, HIGH);
-     analogWrite(pwm_a, 0);
+     digitalWrite(dir_a, LOW);
+     analogWrite(pwm_a, 50);
   }
-  else if(Abstand >= 10 && Abstand < 120) // increasing the speed towards the distance
+  else if(Abstand >= 35 && Abstand < 120) // increasing the speed towards the distance
   {
     digitalWrite(dir_a, HIGH);
     analogWrite(pwm_a, SpeedForward()) ; 
@@ -44,7 +47,7 @@ void loop() {
   else
   {
     digitalWrite(dir_a, HIGH);
-    analogWrite(pwm_a, 151) ; // maximum speed when above 120 cm
+    analogWrite(pwm_a, 170) ; // maximum speed when above 120 cm
   }
 
   delay(50);
@@ -52,7 +55,7 @@ void loop() {
 
 int SpeedForward()
 {
-  int motorSpeed = map(Abstand, 10, 120, 80, 150); 
+  int motorSpeed = map(Abstand, 35, 120, 120, 145); 
   return motorSpeed;
 }
 

@@ -5,14 +5,14 @@ int pos = 0; //position for servo
 int ch3; // servo
 
 void setup() {
-  myservo.attach(11);
-  pinMode(8, INPUT);
+  myservo.attach(9);
+  pinMode(5, INPUT);
   
   Serial.begin(9600);
 }
 
 void loop() {
-  ch3 = pulseIn(8, HIGH, 25000);
+  ch3 = pulseIn(5, HIGH, 25000);
 
   Serial.print("Channel 3:");
   Serial.println(ch3);
@@ -37,5 +37,5 @@ void loop() {
   myservo.write(pos);
   // tell servo to go to position in variable 'pos'
   }
-
+delay(500);
 }

@@ -2,6 +2,12 @@
 // PIN PWM       D3
 // PIN Direction D12\ i D13 ako imame vtori motor
 // PIN BRAKE     D9 \ spirachka
+#include <AFMotor.h>            // Addvam foldera v koito sedi Servo.h
+#include <Servo.h>              // Add library
+
+Servo name_servo;               // Define any servo name !!!!!!ili nov motor shield ili 2 motora , po edin za vsqka guma
+
+int servo_position = 0 ;
 
 int pwm_a = 3;
 int dir_a = 2;
@@ -9,6 +15,8 @@ int break_a = 9;
 int ch2;
 
 void setup() {
+
+  name_servo.attach (10);          // Define the servo signal pins// trqbva da vidq kyde e attachnato(vij saita)
 
   pinMode( pwm_a, OUTPUT ); // PWM
   pinMode( dir_a, OUTPUT ); // Direction
@@ -23,6 +31,18 @@ void loop() {
   Serial.print("Pulses");
   Serial.print("     ");
   Serial.println(ch2);
+
+   for (servo_position = 0; servo_position <=180; servo_position +=1){ // proba za vyrteneto
+
+    name_servo.write(servo_position);
+    delay(10);
+  }
+
+  for (servo_position=180; servo_position >= 0; servo_position -=1){
+
+    name_servo.write(servo_position);
+    delay(10);
+  }                                                                    //proba za vyrteneto
   
   if (ch2 > 1499) // forward
   {
