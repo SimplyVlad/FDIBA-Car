@@ -5,7 +5,7 @@
 
 int pwm_a = 3;
 int dir_a = 2;
-int break_a = 9;
+int break_a = 8;
 int ch2;
 
 void setup() {
@@ -29,16 +29,16 @@ void loop() {
      digitalWrite(dir_a, HIGH);
      analogWrite(pwm_a, SpeedForward());
   }
-  else if(ch2<1200 && ch2>0)//backwards
+  else if(ch2<1200 && ch2>730)//backwards
   {
     digitalWrite(dir_a,LOW);
     analogWrite(pwm_a, SpeedBackwards());
   }
   else //stop(default position)
   {
+    digitalWrite(dir_a,HIGH);
+    analogWrite(pwm_a, 20);
     digitalWrite(break_a,HIGH);
-    //digitalWrite(dir_a,LOW);
-    //analogWrite(pwm_a, 20);
   }
   delay(50);
 }

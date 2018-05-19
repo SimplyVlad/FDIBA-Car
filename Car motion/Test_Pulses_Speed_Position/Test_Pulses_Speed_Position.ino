@@ -37,18 +37,24 @@ void loop() {
   Serial.println(ch2);
   
  
- /*  for (servo_position = 20; servo_position <=120; servo_position +=1){ // proba za vyrteneto
+  for (servo_position = 20; servo_position <=120; servo_position +=1){ // proba za vyrteneto
 
     name_servo.write(servo_position);
     delay(10);
   }
-
+  digitalWrite(dir_a, HIGH);
+  analogWrite(pwm_a, 100);
+  delay(2000);
   for (servo_position=120; servo_position >= 20; servo_position -=1){
 
     name_servo.write(servo_position);
     delay(10);
-  }                                                                    //proba za vyrteneto
-  */
+  }                                                                     //proba za vyrteneto
+  digitalWrite(dir_a, HIGH);
+  analogWrite(pwm_a, 100);
+  delay(2000);
+  name_servo.write(90);
+  
   if (ch2 > 1499) // forward
   {
      digitalWrite(dir_a, HIGH);
@@ -58,23 +64,12 @@ void loop() {
   {
     digitalWrite(dir_a,LOW);
     analogWrite(pwm_a, SpeedBackwards());
-     for (servo_position = 20; servo_position <=120; servo_position +=1){ // proba za vyrteneto
-        name_servo.write(servo_position);
-        delay(10);
-     }
-
-     for (servo_position=120; servo_position >= 20; servo_position -=1){
-
-        name_servo.write(servo_position);
-        delay(10);
-     }
   }
   else //stop(default position)
   {
+    digitalWrite(dir_a,LOW);
     analogWrite(pwm_a, 20);
     digitalWrite(break_a,HIGH);
-    //digitalWrite(dir_a,LOW);
-    //analogWrite(pwm_a, 20);
   }
   delay(50);
 }
